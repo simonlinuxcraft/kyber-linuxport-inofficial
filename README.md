@@ -30,36 +30,6 @@ not only Steam's. Saving a custom Proton path no longer fails with an "os error
 itself: on start it checks GitHub for a newer launcher and offers to download
 and restart into it (the AUR package keeps using the package manager).
 
-v0.1.0-beta.6.4.8 hardens game launch. On the Steam Deck the launcher no longer
-hangs forever when a Wine helper call stalls (calls are now bounded, with a
-generous default so a first-run runtime download is not cut off), and the
-post-launch grace window is raised so a slow Deck is not refocused over the
-still-loading game. On systems older than glibc 2.38 it now shows a dialog and
-exits cleanly instead of crashing windowless. Starting or joining a game with a
-missing game directory (a moved custom path or an unmounted drive) now reports a
-clear error instead of crashing the launcher.
-
-v0.1.0-beta.6.4.7 fixed a first-start crash on the intro video for fresh installs
-on systems that have a system libmpv installed. The bundled libmpv is pinned so
-the host copy is never loaded, and the intro video is kept on all distributions.
-
-It carries everything from 6.4.6: an in-app Native Wayland toggle (Settings ->
-Mods / Proton / Wayland); X11 stays the default, the toggle only shows on a
-Wayland session and applies after a restart. From 6.4.5 it brings a batch of
-upstream launcher fixes and the AppImage startup and slimming fixes. Mods packed
-inside a subfolder of a download now install, a single unreachable proxy no
-longer empties the proxy list, corrupted collections show a warning and a working
-copy is preferred when joining, the server browser search clears on tab switch,
-and the window can be dragged by the full title bar. It also fixes a possible
-startup crash on minimal systems without a system librsvg.
-
-It carries the Steam Deck launch work from 6.4.4: the pre-launch registry setup
-is skipped when the prefix files already carry the needed values (a Deck tester
-saw that setup stall for over an hour), and the first launch reuses the Steam
-Linux Runtime that Steam already ships on the Deck instead of having umu download
-its own copy. On rolling Arch and CachyOS it needs the nettle3 package, which the
-launcher points out.
-
 Older releases are listed in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Heads up
