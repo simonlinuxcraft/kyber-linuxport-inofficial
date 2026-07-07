@@ -17,16 +17,16 @@ not to upstream Kyber.
 ## Latest release
 
 The latest build is
-[v0.1.0-beta.6.4.10](https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/tag/v0.1.0-beta.6.4.10)
+[v0.1.0-beta.6.4.11](https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/tag/v0.1.0-beta.6.4.11)
 from 2026-07-07.
 
-v0.1.0-beta.6.4.10 warns you before hosting when your hostname resolves to a
-loopback other than 127.0.0.1 (common on Debian, Ubuntu, and CachyOS), which
-otherwise crashes a hosted server; the launcher shows the one-line /etc/hosts
-fix instead. Server communication errors now report the real reason rather than
-a generic message, so a failed server list or join is easier to diagnose. NXM
-mod downloads no longer hit a race or show wrong toasts, and the AppImage
-self-updater is limited to standalone AppImage installs.
+v0.1.0-beta.6.4.11 fixes the AppImage self-updater, which never detected new
+releases: GitHub serves the update manifest as octet-stream and the launcher
+left it undecoded. Because the broken updater shipped in every earlier build,
+update to this one by hand once; after that the in-app updater works. It also
+carries the 6.4.10 changes: a warning before hosting when your hostname resolves
+to a loopback other than 127.0.0.1 (Debian, Ubuntu, CachyOS), clearer server
+communication errors, and NXM mod-download fixes.
 
 Older releases are listed in [`CHANGELOG.md`](CHANGELOG.md).
 

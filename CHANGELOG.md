@@ -5,6 +5,17 @@ All notable changes to the Kyber Linux Port are recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning tracks upstream Kyber, with port-specific patches noted separately.
 
+## [0.1.0-beta.6.4.11] - 2026-07-07 - Self-Update Fix
+
+### Fixed
+
+- The AppImage self-updater never detected new releases. It fetched the update
+  manifest, but GitHub serves release assets as application/octet-stream, so the
+  launcher left the JSON undecoded and rejected it. It now reads the manifest as
+  text and parses it, so a newer AppImage is detected and offered. Because the
+  broken updater shipped in every prior build, update to this one by hand once;
+  from there on the in-app updater works.
+
 ## [0.1.0-beta.6.4.10] - 2026-07-07 - Hosting Hint & Fixes
 
 ### Added
