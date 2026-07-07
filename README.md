@@ -98,7 +98,9 @@ Tested on Ubuntu 24.04 with an Nvidia RTX 3060. Other distros should work
 since the AppImage bundles its own runtime, but I haven't verified every
 one personally. The build needs glibc 2.38 or newer, so older releases
 (Ubuntu 22.04, Debian 12, SteamOS 3.6) cannot run it; use 24.04+, Fedora,
-SteamOS 3.7+ or Bazzite.
+SteamOS 3.7+ or Bazzite. To keep an old host as-is, run the AppImage inside
+an Ubuntu 24.04 Distrobox container (glibc 2.39); see
+[`docs/running-in-distrobox.md`](docs/running-in-distrobox.md).
 
 On Arch or CachyOS you can install from the AUR instead:
 
