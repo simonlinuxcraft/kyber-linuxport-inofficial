@@ -5,6 +5,31 @@ All notable changes to the Kyber Linux Port are recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning tracks upstream Kyber, with port-specific patches noted separately.
 
+## [0.1.0-beta.6.4.10] - 2026-07-07 - Hosting Hint & Fixes
+
+### Added
+
+- A warning before hosting when the machine hostname resolves to a loopback
+  address other than 127.0.0.1 (common on Debian, Ubuntu, and Calamares-based
+  installs such as CachyOS). In that state a hosted server connects to itself
+  by name and the game crashes shortly after the map loads. The launcher now
+  detects this on the Start Server click and shows the exact /etc/hosts fix
+  instead of letting the host crash with no hint. Joining servers is unaffected.
+
+### Fixed
+
+- NXM mod downloads: fixed a race condition and several wrong or duplicated
+  toast messages when starting a download from the mod browser or an nxm:// link.
+
+### Changed
+
+- Server communication errors now show the real reason (network, TLS, or
+  backend message) instead of a generic "An error occurred" toast, so a failed
+  server list, preview, or join is easier to diagnose.
+- The AppImage self-updater only runs for standalone AppImage installs now.
+  AUR and other package-manager installs update through the package manager
+  instead of the in-app updater.
+
 ## [0.1.0-beta.6.4.9] - 2026-06-28 - Non-Steam Support
 
 Battlefront II no longer has to come from Steam. A copy installed through

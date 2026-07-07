@@ -17,18 +17,16 @@ not to upstream Kyber.
 ## Latest release
 
 The latest build is
-[v0.1.0-beta.6.4.9](https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/tag/v0.1.0-beta.6.4.9)
-from 2026-06-28.
+[v0.1.0-beta.6.4.10](https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/tag/v0.1.0-beta.6.4.10)
+from 2026-07-07.
 
-v0.1.0-beta.6.4.9 adds Non-Steam support. A Battlefront II copy installed
-through Lutris, the Epic Games Store, or the EA app can be launched by setting a
-custom game path; Kyber then builds its own Wine prefix instead of relying on a
-Steam prefix. The Steam path is unchanged. Proton auto-detection now also finds
-GE-Proton 11.x and proton-cachyos, and looks in Heroic and Lutris directories,
-not only Steam's. Saving a custom Proton path no longer fails with an "os error
-2" when it is set before BF2 was ever launched. The AppImage can now update
-itself: on start it checks GitHub for a newer launcher and offers to download
-and restart into it (the AUR package keeps using the package manager).
+v0.1.0-beta.6.4.10 warns you before hosting when your hostname resolves to a
+loopback other than 127.0.0.1 (common on Debian, Ubuntu, and CachyOS), which
+otherwise crashes a hosted server; the launcher shows the one-line /etc/hosts
+fix instead. Server communication errors now report the real reason rather than
+a generic message, so a failed server list or join is easier to diagnose. NXM
+mod downloads no longer hit a race or show wrong toasts, and the AppImage
+self-updater is limited to standalone AppImage installs.
 
 Older releases are listed in [`CHANGELOG.md`](CHANGELOG.md).
 
