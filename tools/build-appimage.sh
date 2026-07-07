@@ -461,9 +461,9 @@ PYEOF
 fi
 
 # AppImage launcher self-update endpoint (manifest JSON published as a release
-# asset). Only the AppImage build runs AppRun, so this env is absent in the AUR
-# package (which runs the extracted binary), keeping self-update off there.
-# Honors an existing value for dev overrides; empty disables the updater.
+# asset). Gated to "loose" AppImage installs: AUR/repo-owned binaries (pacman
+# -Qo hit) and the extracted /opt AUR install ($APPIMAGE empty -> Dart skips)
+# get no updater. Explicit env wins (even empty), so the PKGBUILD can force off.
 if [ -f "$APPRUN" ] && ! grep -q "KYBER_UPDATE_URL" "$APPRUN"; then
   python3 - "$APPRUN" <<'PYEOF'
 import sys, pathlib
@@ -471,8 +471,18 @@ p = pathlib.Path(sys.argv[1])
 src = p.read_text()
 needle = '# KYBER_SELF_INSTALL_HOOK'
 inject = (
-    '# KYBER_UPDATE_URL\n'
-    'export KYBER_UPDATE_URL="${KYBER_UPDATE_URL:-https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/latest/download/latest.json}"\n'
+    '# KYBER_UPDATE_URL - only self-update "loose" AppImage installs. AUR/repo\n'
+    '# binaries are owned by pacman and update via the package; the in-app\n'
+    '# container updater must stay out of their way. Discriminator is per binary\n'
+    '# (pacman ownership), not per distro. ${VAR+x} honours an explicit env (even\n'
+    '# empty), letting the PKGBUILD force the updater off deterministically.\n'
+    'if [ -n "${KYBER_UPDATE_URL+x}" ]; then\n'
+    '    : # explicit override (incl. empty=off) - honour as-is\n'
+    'elif [ -n "${APPIMAGE:-}" ] && command -v pacman >/dev/null 2>&1 && pacman -Qo "$APPIMAGE" >/dev/null 2>&1; then\n'
+    '    : # AUR/repo-owned binary -> leave unset -> updater stays off\n'
+    'else\n'
+    '    export KYBER_UPDATE_URL="https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/latest/download/latest.json"\n'
+    'fi\n'
     '\n'
 )
 if needle in src and 'KYBER_UPDATE_URL' not in src:
