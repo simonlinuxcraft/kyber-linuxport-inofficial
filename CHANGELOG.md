@@ -5,6 +5,25 @@ All notable changes to the Kyber Linux Port are recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning tracks upstream Kyber, with port-specific patches noted separately.
 
+## [0.1.0-beta.6.4.12] - 2026-07-28 - Runtime Check Fallback
+
+### Fixed
+
+- A game launch no longer fails while lutris.net is unreachable. Maxima asks
+  that API on every launch to compare the installed umu and EAC runtime
+  versions against the current ones, and an outage there aborted the launch
+  even for users who had both runtimes installed already. The launcher now
+  logs a warning and starts with what is on disk; only a fresh install, which
+  has nothing to fall back to, still stops. Version checks and runtime updates
+  resume on their own once the API answers again, so the
+  MAXIMA_DISABLE_WINE_VERIFICATION workaround is no longer needed. That
+  variable also skipped the Wine and Proton checks, which this fallback does not.
+
+### Added
+
+- The install section of the README now links the Distrobox guide, which is the
+  way to run the launcher on hosts whose glibc is older than the AppImage needs.
+
 ## [0.1.0-beta.6.4.11] - 2026-07-07 - Self-Update Fix
 
 ### Fixed

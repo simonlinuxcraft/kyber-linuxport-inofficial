@@ -17,16 +17,17 @@ not to upstream Kyber.
 ## Latest release
 
 The latest build is
-[v0.1.0-beta.6.4.11](https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/tag/v0.1.0-beta.6.4.11)
-from 2026-07-07.
+[v0.1.0-beta.6.4.12](https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/tag/v0.1.0-beta.6.4.12)
+from 2026-07-28.
 
-v0.1.0-beta.6.4.11 fixes the AppImage self-updater, which never detected new
-releases: GitHub serves the update manifest as octet-stream and the launcher
-left it undecoded. Because the broken updater shipped in every earlier build,
-update to this one by hand once; after that the in-app updater works. It also
-carries the 6.4.10 changes: a warning before hosting when your hostname resolves
-to a loopback other than 127.0.0.1 (Debian, Ubuntu, CachyOS), clearer server
-communication errors, and NXM mod-download fixes.
+v0.1.0-beta.6.4.12 keeps game launches working while lutris.net is down. That
+API is checked on every launch to compare the installed umu and EAC runtime
+versions, and an outage there used to abort the launch even with both runtimes
+installed. The launcher now starts with what is on disk and picks the version
+checks back up once the API answers. It also carries the 6.4.11 self-updater
+fix: because the broken updater shipped in every build before that one, update
+by hand once if you are still on 6.4.10 or older; after that the in-app updater
+works.
 
 Older releases are listed in [`CHANGELOG.md`](CHANGELOG.md).
 
