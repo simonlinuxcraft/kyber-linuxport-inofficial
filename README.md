@@ -24,10 +24,12 @@ v0.1.0-beta.6.4.12 keeps game launches working while lutris.net is down. That
 API is checked on every launch to compare the installed umu and EAC runtime
 versions, and an outage there used to abort the launch even with both runtimes
 installed. The launcher now starts with what is on disk and picks the version
-checks back up once the API answers. It also carries the 6.4.11 self-updater
-fix: because the broken updater shipped in every build before that one, update
-by hand once if you are still on 6.4.10 or older; after that the in-app updater
-works.
+checks back up once the API answers. It also stops rescanning every process on
+the system many times a second while a game runs, which cuts a lot of pointless
+kernel work, including a sensor read on the GPU per pass. It also carries the
+6.4.11 self-updater fix: because the broken updater shipped in every build
+before that one, update by hand once if you are still on 6.4.10 or older; after
+that the in-app updater works.
 
 Older releases are listed in [`CHANGELOG.md`](CHANGELOG.md).
 

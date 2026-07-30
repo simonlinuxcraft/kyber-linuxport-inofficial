@@ -5,7 +5,7 @@ All notable changes to the Kyber Linux Port are recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning tracks upstream Kyber, with port-specific patches noted separately.
 
-## [0.1.0-beta.6.4.12] - 2026-07-28 - Runtime Check Fallback
+## [0.1.0-beta.6.4.12] - 2026-07-28 - Launch Reliability
 
 ### Fixed
 
