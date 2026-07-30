@@ -19,6 +19,17 @@ Versioning tracks upstream Kyber, with port-specific patches noted separately.
   MAXIMA_DISABLE_WINE_VERIFICATION workaround is no longer needed. That
   variable also skipped the Wine and Proton checks, which this fallback does not.
 
+### Changed
+
+- The launcher no longer rescans every process on the system 40 times a second
+  while a game is running. The scan that checks whether the game is still alive
+  sat on the 25ms update loop and refreshed far more than it reads: every hwmon
+  sensor (on AMD each read is a firmware round-trip to the GPU), a statvfs on
+  every mount including FUSE ones, and `/proc/<pid>/io` for every process. It now
+  refreshes processes only, and at most once every two seconds. Detecting that
+  the game has stopped can lag by that much as a result, which is well inside
+  the existing grace window.
+
 ### Added
 
 - The install section of the README now links the Distrobox guide, which is the
