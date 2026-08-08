@@ -18,18 +18,23 @@ not to upstream Kyber.
 
 The latest build is
 [v0.1.0-beta.6.4.12](https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/tag/v0.1.0-beta.6.4.12)
-from 2026-07-28.
+from 2026-08-08.
 
-v0.1.0-beta.6.4.12 keeps game launches working while lutris.net is down. That
-API is checked on every launch to compare the installed umu and EAC runtime
-versions, and an outage there used to abort the launch even with both runtimes
-installed. The launcher now starts with what is on disk and picks the version
-checks back up once the API answers. It also stops rescanning every process on
-the system many times a second while a game runs, which cuts a lot of pointless
-kernel work, including a sensor read on the GPU per pass. It also carries the
-6.4.11 self-updater fix: because the broken updater shipped in every build
-before that one, update by hand once if you are still on 6.4.10 or older; after
-that the in-app updater works.
+v0.1.0-beta.6.4.12 is about working with mods. Better Sabers runs on Linux now:
+drop the plugin into the Plugins folder and the saber manager opens from the
+launcher, finds the game by itself and hands the generated mod back to your
+collection. The mod list can ask Nexus which of your mods have a newer version
+and marks them. Collections can be imported, both as a plain `.kbcollection`
+and as the tar archive that carries the mod files with it, and a collection can
+be added even when some of its mods are still missing.
+
+It also keeps game launches working while lutris.net is down, which used to
+abort the launch outright, and stops rescanning every process on the system
+many times a second while a game runs.
+
+If you are still on 6.4.10 or older, update by hand once: the self-updater was
+broken in every build before 6.4.11, so those versions cannot fetch the fix
+themselves. After that the in-app updater works.
 
 Older releases are listed in [`CHANGELOG.md`](CHANGELOG.md).
 

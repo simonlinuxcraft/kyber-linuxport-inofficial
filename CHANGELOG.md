@@ -5,10 +5,46 @@ All notable changes to the Kyber Linux Port are recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning tracks upstream Kyber, with port-specific patches noted separately.
 
-## [0.1.0-beta.6.4.12] - 2026-07-28 - Launch Reliability
+## [0.1.0-beta.6.4.12] - 2026-08-08 - Mod Management
+
+### Added
+
+- Better Sabers works on Linux. The plugin ships as a Windows .NET
+  application, which the launcher cannot load the way it does on Windows, so
+  the entry was hidden and dropping the plugin into the Plugins folder did
+  nothing. The plugin file turns out to carry the saber manager as a complete
+  application inside it; that is now unpacked into the Wine prefix the game
+  already uses and started from there. The manager finds the game on its own,
+  because the launcher writes the configured game path into the prefix before
+  starting it, and the generated saber mod comes back into the collection just
+  like on Windows. Setting this up downloads the .NET desktop runtime into the
+  prefix once, about 60 MB. The plugin is also found when the Nexus archive was
+  unpacked into a subfolder instead of dropped into Plugins directly.
+- The mod list can check Nexus for newer versions. A button in its header runs
+  the check, mods with a newer file are marked, and the mark opens the download
+  for premium accounts or the mod page for everyone else. Mods that were copied
+  in by hand and Frosty collections cannot be checked, since their folder name
+  carries no Nexus reference. The check runs on demand rather than on its own:
+  it needs one request per mod, and the Nexus daily limit is finite.
+- Collections can be imported, not only exported. The button next to the
+  collections list takes both shapes a collection is passed around in: the bare
+  `.kbcollection` definition, and the tar archive written by "export collection
+  tar", which carries the mod files with it. Mods already installed are kept as
+  they are rather than being replaced.
+- The import screen finishes the job. It used to list the mods of a collection
+  behind a button that did nothing, so a shared collection could be inspected
+  but never added. It now adds the collection whether or not every mod is
+  present; missing ones stay listed and marked, so a collection can be set up
+  first and completed later.
+- The install section of the README now links the Distrobox guide, which is the
+  way to run the launcher on hosts whose glibc is older than the AppImage needs.
 
 ### Fixed
 
+- Deleting mods no longer looks broken. Mods are selected by clicking their
+  icon, which is easy to miss because clicking anywhere else in the row opens
+  the info panel instead, and with nothing selected the delete button did
+  nothing and gave no reason. It now says what to do.
 - A game launch no longer fails while lutris.net is unreachable. Maxima asks
   that API on every launch to compare the installed umu and EAC runtime
   versions against the current ones, and an outage there aborted the launch
