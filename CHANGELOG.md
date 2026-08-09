@@ -5,7 +5,7 @@ All notable changes to the Kyber Linux Port are recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning tracks upstream Kyber, with port-specific patches noted separately.
 
-## [0.1.0-beta.6.4.12] - 2026-08-08 - Mod Management
+## [0.1.0-beta.6.4.12] - 2026-08-09 - Mod Management
 
 ### Added
 
@@ -19,7 +19,10 @@ Versioning tracks upstream Kyber, with port-specific patches noted separately.
   starting it, and the generated saber mod comes back into the collection just
   like on Windows. Setting this up downloads the .NET desktop runtime into the
   prefix once, about 60 MB. The plugin is also found when the Nexus archive was
-  unpacked into a subfolder instead of dropped into Plugins directly.
+  unpacked into a subfolder instead of dropped into Plugins directly. It builds
+  on the Wine runtime that Kyber installs for the game, so the game has to have
+  been started once before the manager can open; until then the button says so
+  instead of claiming the plugin is missing.
 - The mod list can check Nexus for newer versions. A button in its header runs
   the check, mods with a newer file are marked, and the mark opens the download
   for premium accounts or the mod page for everyone else. Mods that were copied
@@ -36,6 +39,15 @@ Versioning tracks upstream Kyber, with port-specific patches noted separately.
   but never added. It now adds the collection whether or not every mod is
   present; missing ones stay listed and marked, so a collection can be set up
   first and completed later.
+- The Better Sabers button is always there now, not only once the plugin is
+  installed. That was backwards: someone who has never installed it had no way
+  of learning that the Plugins folder exists, and that is exactly where people
+  got stuck. Without the plugin the button explains where the file belongs and
+  offers to open the folder, creating it first if a fresh install has none.
+- The mod filter can list duplicates: mods installed more than once under the
+  same name and version, no matter which folder they sit in. Removing them
+  stays manual through the delete button, since which copy to keep is not
+  something to guess.
 - The install section of the README now links the Distrobox guide, which is the
   way to run the launcher on hosts whose glibc is older than the AppImage needs.
 
@@ -45,6 +57,33 @@ Versioning tracks upstream Kyber, with port-specific patches noted separately.
   icon, which is easy to miss because clicking anywhere else in the row opens
   the info panel instead, and with nothing selected the delete button did
   nothing and gave no reason. It now says what to do.
+- Deleting a mod removes the folder it unpacked into, once nothing is left in
+  it. Only collections did that before, so every mod that came from Nexus left
+  an empty folder behind.
+- Regenerating sabers no longer piles up copies. Every generated pack carries a
+  random stamp in its file name, so a second run left the first pack in place:
+  two entries with the same name and version in the mod list, and a collection
+  that listed the same pack three times over. The existing cleanup never worked,
+  because it removed at most one entry and went through a path that returns
+  immediately unless the collection is in edit mode. Older packs of the same
+  name are now removed after a run, in the mods folder as well as in the
+  manager's own output folder inside the prefix, and a collection drops its
+  stale entries regardless of edit mode. Packs of other names are left alone,
+  so per-collection sabers still coexist.
+- The saber manager no longer comes up empty because of a single mod. It builds
+  a preview for every mod it loads and decodes images through the Windows
+  Imaging Component, whose Wine version has no WebP decoder, so one mod with a
+  WebP screenshot took the whole load down with it rather than just itself.
+  Those mods are now left out of the list handed to the manager, which costs
+  their sabers and keeps everything else working.
+- Importing a collection archive compares against the files already in the mods
+  folder by name and size, instead of only checking the target path, so an
+  archive no longer adds a second copy of a mod that arrived some other way.
+- The update check reports what it found, not only what it missed. Mods whose
+  Nexus page cannot be read, which is what hidden or removed mods answer with,
+  used to be the entire message, so a run that checked ninety mods and found
+  nothing outdated looked like a failed check. Every mod is asked on its own,
+  so the others were checked either way and their result now stands on its own.
 - A game launch no longer fails while lutris.net is unreachable. Maxima asks
   that API on every launch to compare the installed umu and EAC runtime
   versions against the current ones, and an outage there aborted the launch
@@ -65,11 +104,6 @@ Versioning tracks upstream Kyber, with port-specific patches noted separately.
   refreshes processes only, and at most once every two seconds. Detecting that
   the game has stopped can lag by that much as a result, which is well inside
   the existing grace window.
-
-### Added
-
-- The install section of the README now links the Distrobox guide, which is the
-  way to run the launcher on hosts whose glibc is older than the AppImage needs.
 
 ## [0.1.0-beta.6.4.11] - 2026-07-07 - Self-Update Fix
 
