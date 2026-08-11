@@ -1,6 +1,25 @@
 <h1 align="center">
-  <img src="assets/header-banner.svg" alt="Kyber Linux Port - Unofficial Linux Port" width="560">
+  <img src="assets/kyber-banner.png" alt="Kyber Linux Port - Unofficial Linux Port" width="800">
 </h1>
+
+<p align="center">
+  <a href="https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/latest"><img src="https://img.shields.io/github/v/release/simonlinuxcraft/kyber-linuxport-unofficial?label=release&color=f8b133" alt="Latest release"></a>
+  <a href="https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases"><img src="https://img.shields.io/github/v/release/simonlinuxcraft/kyber-linuxport-unofficial?include_prereleases&label=test%20build&color=8b8b8b" alt="Latest test build"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPLv3-blue" alt="GPLv3"></a>
+  <img src="https://img.shields.io/badge/glibc-2.38%2B-lightgrey" alt="Requires glibc 2.38 or newer">
+</p>
+
+<p align="center">
+  <a href="https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/latest"><b>Download the AppImage</b></a>
+  &nbsp;·&nbsp;
+  <a href="#test-build">Test build</a>
+  &nbsp;·&nbsp;
+  <a href="#install">Install</a>
+  &nbsp;·&nbsp;
+  <a href="#steam-deck--steamos">Steam Deck</a>
+  &nbsp;·&nbsp;
+  <a href="CHANGELOG.md">Changelog</a>
+</p>
 
 Unofficial Linux build of the [Kyber](https://kyber.gg) mod launcher for
 Star Wars: Battlefront II (2017). The upstream launcher is Windows only,
@@ -14,39 +33,66 @@ EA, Lucasfilm, or Disney. If you're on Windows, use the
 [official launcher](https://kyber.gg). Bugs in this Linux build go here,
 not to upstream Kyber.
 
+> [!IMPORTANT]
+> The build needs **glibc 2.38 or newer**. Ubuntu 22.04, Debian 12 and
+> SteamOS 3.6 cannot run it. See [Install](#install) for the supported
+> systems and the Distrobox workaround.
+
+<p align="center">
+  <img src="assets/screenshot-home.jpg" alt="Server browser" width="900">
+</p>
+
+<details>
+<summary>More screenshots</summary>
+
+<p align="center">
+  <img src="assets/screenshot-mods.jpg" alt="Mod list and collections" width="900">
+  <img src="assets/screenshot-settings.jpg" alt="Settings" width="900">
+</p>
+
+</details>
+
 ## Latest release
 
-The latest build is
-[v0.1.0-beta.6.4.12](https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/tag/v0.1.0-beta.6.4.12)
-from 2026-08-08.
+v0.1.0-beta.6.4.11 is the current stable build. It fixes the AppImage
+self-updater, which never detected new releases because GitHub serves release
+assets as `application/octet-stream` and the launcher rejected the undecoded
+manifest.
 
-v0.1.0-beta.6.4.12 is about working with mods. Better Sabers runs on Linux now:
+If you are still on 6.4.10 or older, update by hand once: the broken updater
+shipped in every build before 6.4.11, so those versions cannot fetch the fix
+themselves. After that the in-app updater works.
+
+### Test build
+
+[v0.1.0-beta.6.4.12](https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/tag/v0.1.0-beta.6.4.12) is available as a
+pre-release and is about working with mods. Better Sabers runs on Linux now:
 drop the plugin into the Plugins folder and the saber manager opens from the
 launcher, finds the game by itself and hands the generated mod back to your
-collection. The mod list can ask Nexus which of your mods have a newer version
-and marks them. Collections can be imported, both as a plain `.kbcollection`
-and as the tar archive that carries the mod files with it, and a collection can
-be added even when some of its mods are still missing.
+collection. The mod list can ask Nexus which of your mods have a newer
+version and marks them. Collections can be imported, both as a plain
+`.kbcollection` and as the tar archive that carries the mod files with it, and a
+collection can be added even when some of its mods are still missing.
 
 It also keeps game launches working while lutris.net is down, which used to
 abort the launch outright, and stops rescanning every process on the system
 many times a second while a game runs.
 
-If you are still on 6.4.10 or older, update by hand once: the self-updater was
-broken in every build before 6.4.11, so those versions cannot fetch the fix
-themselves. After that the in-app updater works.
+It is not offered by the in-app updater, so grab it from the releases page if
+you want to try it.
 
 Older releases are listed in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Heads up
 
-This is a beta and a one-person port, so expect rough edges. The inject
-works on the common setups now, but voice chat is not fully proven yet,
-Nexus mod downloads can still fail, and some distro or GPU combinations
-do not work at all (a VM without GPU passthrough will not run BF2, for
-example).
+> [!WARNING]
+> This is a beta and a one-person port, so expect rough edges. The inject
+> works on the common setups now, but voice chat is not fully proven yet,
+> Nexus mod downloads can still fail, and some distro or GPU combinations
+> do not work at all (a VM without GPU passthrough will not run BF2, for
+> example).
 
-It also assumes a healthy system underneath. A working Steam-Proton or
+It assumes a healthy system underneath. A working Steam-Proton or
 Lutris install of BF2, a real GPU with proper Vulkan drivers, and a
 normal desktop audio stack. The launcher cannot fix a broken Proton
 prefix or missing graphics drivers. A well set up system is the
@@ -73,17 +119,20 @@ sudo pacman -S --needed gtk3 fuse2 librsvg libnotify gst-plugins-bad gst-plugins
 Fedora: the equivalent gtk3, fuse, librsvg2, libnotify and gstreamer1
 plugin packages.
 
-gtk3, librsvg, libnotify and fuse are required, the app will not start
-cleanly without them. (webkit2gtk is no longer needed: the in-app
-webview is unused on Linux, so it was dropped to fix startup on systems
-without a system webkit such as the Steam Deck.) The gstreamer plugins
-make the EA login splash video play (silent without them, not fatal).
-zenity drives the first-start dialog. gamemode is optional but recommended,
-it keeps the CPU governor on performance for smoother frames. libmpv
-is bundled inside the AppImage, you do not install it yourself. nettle3 is
-only needed on rolling Arch/CachyOS, which now ships nettle 4.0 (libnettle.so.9);
-without the libnettle.so.8 it provides the launcher will not start, and it
-shows a dialog telling you so.
+| Package | What it does | Needed |
+| --- | --- | --- |
+| gtk3, librsvg, libnotify, fuse2 | The launcher window itself | Required, will not start without them |
+| gstreamer plugins (bad, ugly, libav) | Plays the EA login splash video | Optional, silent without them |
+| zenity | First-start dialog that offers the desktop entry | Recommended, preinstalled on most distros |
+| gamemode | Keeps the CPU governor on performance | Optional, smoother frames |
+| nettle3 | Provides libnettle.so.8 | Rolling Arch/CachyOS only, see below |
+
+webkit2gtk is no longer needed: the in-app webview is unused on Linux, so
+it was dropped to fix startup on systems without a system webkit such as
+the Steam Deck. libmpv is bundled inside the AppImage, you do not install
+it yourself. nettle3 matters because rolling Arch and CachyOS now ship
+nettle 4.0 (libnettle.so.9); without the libnettle.so.8 that nettle3
+provides the launcher will not start, and it shows a dialog telling you so.
 
 ## Install
 
@@ -220,6 +269,14 @@ Output ends up in `tools/KyberLinuxPort-x86_64.AppImage`. First build
 takes a few minutes (cargo fetch, Rust compile, Flutter bundle).
 Subsequent builds are usually around 30 seconds. AppImage packaging
 itself adds about a minute.
+
+The master channel moves fast and engine defaults change with it, so the
+tested SDK revision is recorded in `tools/flutter-revision`. The build
+script warns when your checkout differs; to match it exactly:
+
+```bash
+git -C "$(dirname "$(dirname "$(readlink -f "$(command -v flutter)")")")" checkout "$(cat tools/flutter-revision)"
+```
 
 ## License
 
