@@ -30,6 +30,22 @@ if [ ! -x "$LAUNCHER_BUNDLE/kyber_launcher" ]; then
   exit 1
 fi
 
+# The port builds against the master channel, so an unnoticed `flutter upgrade`
+# can swap engine defaults underneath us. That is how Impeller became the
+# renderer in 6.4.12. Warn only, never block.
+FLUTTER_PIN_FILE="$TOOLS/flutter-revision"
+if [ -r "$FLUTTER_PIN_FILE" ] && command -v flutter >/dev/null 2>&1; then
+  flutter_root="$(dirname "$(dirname "$(readlink -f "$(command -v flutter)")")")"
+  pinned="$(tr -d '[:space:]' < "$FLUTTER_PIN_FILE")"
+  current="$(git -C "$flutter_root" rev-parse HEAD 2>/dev/null || true)"
+  if [ -n "$current" ] && [ "$current" != "$pinned" ]; then
+    echo "WARNING: Flutter SDK is at $current" >&2
+    echo "         tools/flutter-revision pins $pinned" >&2
+    echo "         Engine defaults may differ from the tested build. To match it:" >&2
+    echo "         git -C $flutter_root checkout $pinned" >&2
+  fi
+fi
+
 echo "==> Cleaning previous AppDir"
 rm -rf "$APPDIR"
 mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/share/applications" \
