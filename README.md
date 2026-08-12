@@ -196,9 +196,11 @@ normal (non-Flatpak) browser, where the callback can work automatically.
 
 ### Custom Proton path
 
-The default flow downloads a known-good GE-Proton into
-`~/.local/share/maxima/wine/proton/` and runs BF2 from there. That is the
-only tested-stable path and the recommended default for most users.
+The default flow downloads GE-Proton10-34 into
+`~/.local/share/maxima/wine/proton/` and runs BF2 from there. That version
+is pinned, so a new GE release neither changes what you run nor triggers a
+re-download. It is the only tested-stable path and the recommended default
+for most users.
 
 Advanced users can override the Proton build used for BF2. Settings ->
 Mod Configuration -> "Custom Proton Path (Experimental)" opens a dialog
