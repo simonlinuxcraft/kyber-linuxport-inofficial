@@ -6,6 +6,10 @@ tools/KyberLinuxPort.extracted/
 # Update manifest for the self-updater; regenerated per build, uploaded as a
 # release asset (not source).
 tools/latest.json
+# Tarball derived from the same AppDir, ~183MB. Release asset, never source;
+# without this line a `git add -A` drags it in and the push dies on GitHub's
+# 100MB file limit.
+tools/KyberLinuxPort*.tar.gz
 
 # Sentry native crash-handler runtime data
 .sentry-native/
