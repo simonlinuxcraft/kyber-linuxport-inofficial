@@ -1,0 +1,109 @@
+# Maintainer: simonlinuxcraft <simonlinuxcraft at users dot noreply dot github dot com>
+#
+# Arch/CachyOS package for the Kyber Linux Port, built from the release tarball
+# rather than the AppImage: no FUSE dependency and no squashfs round-trip.
+# Not pushed to the AUR, this ships as a release asset for testing.
+pkgname=kyber-linuxport-bin
+_pkgname=KyberLinuxPort
+_appver=0.1.0-beta.6.4.12
+pkgver=0.1.0_beta.6.4.12
+pkgrel=1
+pkgdesc="Unofficial Linux build of the Kyber mod launcher for Star Wars: Battlefront II (2017). Not endorsed by the Kyber team."
+arch=('x86_64')
+url="https://github.com/simonlinuxcraft/kyber-linuxport-unofficial"
+license=('GPL-3.0-only')
+# The tarball bundles its own GTK stack and media libraries. Listed here are
+# only the ones deliberately left unbundled: the crypto chain must come from
+# the host (a bundled nettle poisons the system gnutls), and the pixbuf/SVG and
+# notification paths load host modules. nettle3 is the old-SONAME compat
+# package, not the current 'nettle' one; the launcher needs libnettle.so.8.
+depends=('gtk3' 'librsvg' 'libnotify' 'nettle3')
+optdepends=('zenity: startup hint dialogs (alternative to kdialog)'
+            'kdialog: startup hint dialogs (alternative to zenity)'
+            'gst-plugins-bad: needed for the Origin login splash video in BF2'
+            'gst-plugins-ugly: needed for the Origin login splash video in BF2'
+            'gst-libav: needed for the Origin login splash video in BF2'
+            'vulkan-tools: vulkaninfo, useful for bug reports'
+            'gamemode: keeps the CPU governor on performance while BF2 runs')
+provides=('kyber-launcher')
+conflicts=('kyber-launcher-unofficial-appimage' 'kyber-launcher-inofficial-appimage')
+options=('!strip')
+source=("${_pkgname}-${_appver}-x86_64.tar.gz::${url}/releases/download/v${_appver}/${_pkgname}-x86_64.tar.gz")
+sha256sums=('98794af6f612d7be47835ceda3a0c11ffc6d7ee018a62a41f59277ef55462bc0')
+
+package() {
+    # The tarball already carries the full application tree, so unlike the
+    # AppImage variant there is nothing to unsquash here.
+    install -dm755 "${pkgdir}/opt/${pkgname}"
+    cp -a "${srcdir}/${_pkgname}/." "${pkgdir}/opt/${pkgname}/"
+
+    # Icons (10 PNG sizes + scalable SVG), upstream name kyber-linux.
+    local _size _src
+    for _size in 16 24 32 48 64 96 128 192 256 512; do
+        _src="${srcdir}/${_pkgname}/usr/share/icons/hicolor/${_size}x${_size}/apps/kyber-linux.png"
+        [ -f "${_src}" ] || continue
+        install -Dm644 "${_src}" \
+            "${pkgdir}/usr/share/icons/hicolor/${_size}x${_size}/apps/kyber-linux.png"
+    done
+    install -Dm644 "${srcdir}/${_pkgname}/usr/share/icons/hicolor/scalable/apps/kyber-linux.svg" \
+        "${pkgdir}/usr/share/icons/hicolor/scalable/apps/kyber-linux.svg"
+
+    # Wrapper. KYBER_NO_AUTO_INSTALL=1 no-ops the self-install hook, and an
+    # explicitly empty KYBER_UPDATE_URL switches the container self-updater off:
+    # AppRun tests with ${VAR+x}, so an empty value counts as set and wins.
+    # pacman owns this copy and is the only thing that may replace it.
+    install -dm755 "${pkgdir}/usr/bin"
+    cat > "${pkgdir}/usr/bin/kyber-linuxport" <<EOF
+#!/bin/sh
+export KYBER_NO_AUTO_INSTALL=1
+export KYBER_UPDATE_URL=
+exec env -u GIO_MODULE_DIR __GL_MaxFramesAllowed=1 \\
+    /opt/${pkgname}/AppRun "\$@"
+EOF
+    chmod 755 "${pkgdir}/usr/bin/kyber-linuxport"
+
+    # Main menu entry. No MimeType here: AppRun forwards argv to the GUI, which
+    # does not deliver qrc/nxm codes - the dedicated handlers below do.
+    install -dm755 "${pkgdir}/usr/share/applications"
+    cat > "${pkgdir}/usr/share/applications/${pkgname}.desktop" <<EOF
+[Desktop Entry]
+Type=Application
+Name=Kyber Launcher (Linux Port)
+GenericName=Star Wars Battlefront II Mod Launcher
+Comment=Unofficial Linux port of the Kyber mod launcher for Star Wars: Battlefront II
+Exec=kyber-linuxport %U
+Icon=kyber-linux
+Terminal=false
+Categories=Game;
+StartupWMClass=kyber-linux
+Keywords=BF2;Battlefront;Kyber;StarWars;
+EOF
+
+    # qrc:// OAuth redirect handler (EA login). Basename matches the one the
+    # self-install hook used, so a stale ~/.config/mimeapps.list entry from an
+    # earlier loose install self-heals onto the /opt copy.
+    cat > "${pkgdir}/usr/share/applications/kyber-linuxport-qrc.desktop" <<EOF
+[Desktop Entry]
+Type=Application
+Name=Kyber QRC Handler
+Comment=Receives qrc:// OAuth redirects for the Kyber EA login flow.
+Exec=/opt/${pkgname}/usr/bin/cli/maxima-bootstrap %u
+NoDisplay=true
+Terminal=false
+StartupNotify=false
+MimeType=x-scheme-handler/qrc;
+EOF
+
+    # nxm:// Nexus Mods download handler.
+    cat > "${pkgdir}/usr/share/applications/kyber-linuxport-nxm.desktop" <<EOF
+[Desktop Entry]
+Type=Application
+Name=Kyber NXM Handler
+Comment=Receives nxm:// links from Nexus Mods and forwards them to the Kyber launcher.
+Exec=/opt/${pkgname}/usr/bin/cli/bin/nxm_handler.sh %u
+NoDisplay=true
+Terminal=false
+StartupNotify=false
+MimeType=x-scheme-handler/nxm;
+EOF
+}
