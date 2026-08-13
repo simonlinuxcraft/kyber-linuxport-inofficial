@@ -323,8 +323,8 @@ chmod +x "$APPDIR/apprun-hooks/kyber-vulkan-precheck.sh"
 
 echo "==> Bundling Kyber glibc pre-check AppRun hook"
 # kyber-glibc-precheck.sh aborts the launch with a clear message when the host
-# glibc is older than 2.38 (SteamOS 3.6, Ubuntu 22.04), instead of the bundled
-# binary crashing windowless with "GLIBC_2.38 not found".
+# glibc is older than 2.39 (SteamOS 3.6, Ubuntu 22.04), instead of the bundled
+# binary crashing windowless with "GLIBC_2.39 not found".
 cp "$TOOLS/kyber-glibc-precheck.sh" "$APPDIR/apprun-hooks/kyber-glibc-precheck.sh"
 chmod +x "$APPDIR/apprun-hooks/kyber-glibc-precheck.sh"
 
@@ -616,7 +616,7 @@ import sys, pathlib
 p = pathlib.Path(sys.argv[1])
 src = p.read_text()
 gate = (
-    '# KYBER_GLIBC_GATE - abort early on glibc < 2.38 with a clear message\n'
+    '# KYBER_GLIBC_GATE - abort early on glibc < 2.39 with a clear message\n'
     'if [ -f "$this_dir"/apprun-hooks/kyber-glibc-precheck.sh ]; then\n'
     '    source "$this_dir"/apprun-hooks/kyber-glibc-precheck.sh || true\n'
     'fi\n'
