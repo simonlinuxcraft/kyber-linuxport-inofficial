@@ -1,6 +1,6 @@
 # Running the Kyber Linux Port in Distrobox (old-glibc hosts)
 
-The launcher hard-requires **glibc ≥ 2.38** (`kyber-glibc-precheck.sh`). On
+The launcher hard-requires **glibc ≥ 2.39** (`kyber-glibc-precheck.sh`). On
 Linux Mint 21.x, Ubuntu 22.04, Debian 12, SteamOS 3.6 and similar, it aborts with
 an "unsupported system" dialog before the first frame. Running it inside an
 **Ubuntu 24.04 Distrobox container (glibc 2.39)** clears the gate while still

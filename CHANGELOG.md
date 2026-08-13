@@ -147,6 +147,12 @@ Versioning tracks upstream Kyber, with port-specific patches noted separately.
   resume on their own once the API answers again, so the
   MAXIMA_DISABLE_WINE_VERIFICATION workaround is no longer needed. That
   variable also skipped the Wine and Proton checks, which this fallback does not.
+- Systems with glibc 2.38 get the "unsupported system" notice instead of a
+  window that never appears. The check admitted 2.38, but one bundled library
+  has required 2.39 since at least May, so those systems failed to load it and
+  aborted before the first frame with nothing but a line on stderr. Nothing
+  that ran before is turned away: every current target sits at 2.39 or higher,
+  and everything below 2.38 was already stopped.
 
 ### Changed
 

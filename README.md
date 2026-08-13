@@ -6,7 +6,7 @@
   <a href="https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/latest"><img src="https://img.shields.io/github/v/release/simonlinuxcraft/kyber-linuxport-unofficial?label=release&color=f8b133" alt="Latest release"></a>
   <a href="https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases"><img src="https://img.shields.io/github/v/release/simonlinuxcraft/kyber-linuxport-unofficial?include_prereleases&label=test%20build&color=8b8b8b" alt="Latest test build"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPLv3-blue" alt="GPLv3"></a>
-  <img src="https://img.shields.io/badge/glibc-2.38%2B-lightgrey" alt="Requires glibc 2.38 or newer">
+  <img src="https://img.shields.io/badge/glibc-2.39%2B-lightgrey" alt="Requires glibc 2.39 or newer">
 </p>
 
 <p align="center">
@@ -34,7 +34,7 @@ EA, Lucasfilm, or Disney. If you're on Windows, use the
 not to upstream Kyber.
 
 > [!IMPORTANT]
-> The build needs **glibc 2.38 or newer**. Ubuntu 22.04, Debian 12 and
+> The build needs **glibc 2.39 or newer**. Ubuntu 22.04, Debian 12 and
 > SteamOS 3.6 cannot run it. See [Install](#install) for the supported
 > systems and the Distrobox workaround.
 
@@ -153,7 +153,7 @@ package manager.
 
 Tested on Ubuntu 24.04 with an Nvidia RTX 3060. Other distros should work
 since the AppImage bundles its own runtime, but I haven't verified every
-one personally. The build needs glibc 2.38 or newer, so older releases
+one personally. The build needs glibc 2.39 or newer, so older releases
 (Ubuntu 22.04, Debian 12, SteamOS 3.6) cannot run it; use 24.04+, Fedora,
 SteamOS 3.7+ or Bazzite. To keep an old host as-is, run the AppImage inside
 an Ubuntu 24.04 Distrobox container (glibc 2.39); see
