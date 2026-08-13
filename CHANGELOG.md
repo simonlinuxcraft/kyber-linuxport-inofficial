@@ -5,9 +5,17 @@ All notable changes to the Kyber Linux Port are recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning tracks upstream Kyber, with port-specific patches noted separately.
 
-## [0.1.0-beta.6.4.12] - 2026-08-09 - Mod Management
+## [0.1.0-beta.6.4.12] - 2026-08-13 - Mod Management and Proton Pin
 
 ### Added
+
+- The Proton row in settings shows which build the next launch will use, for
+  example "Proton Build   GE-Proton10-34 (managed by Kyber)", with the origin
+  being one of custom path, found on this system, managed by Kyber, or
+  downloads on next launch. It replaces the row that only said whether a custom
+  path was set, which is how a directory named GE-Proton10-34 could sit in
+  compatibilitytools.d as a symlink into Lutris' rolling "Proton-GE Latest",
+  hold GE-Proton11-3, and go unnoticed.
 
 - Better Sabers works on Linux. The plugin ships as a Windows .NET
   application, which the launcher cannot load the way it does on Windows, so
@@ -53,6 +61,52 @@ Versioning tracks upstream Kyber, with port-specific patches noted separately.
 
 ### Fixed
 
+- The game stopped launching after GE-Proton11-4 was published on 2026-08-11.
+  The launcher took the newest GE-Proton release and looked for an asset named
+  `GE-Proton<major>-<minor>.tar.gz`; that release renamed the asset to
+  GE-Proton11-4-x86_64.tar.gz and added an aarch64 build, so nothing matched
+  and the launch ended with "couldn't find suitable wine release".
+  Installations that already had a working Proton on disk were hit as well,
+  because the validity check compared against the newest release and a failed
+  update aborted the launch. Two users on different distributions reported it
+  as a blank launcher screen when joining a server. Proton is now pinned: that
+  tag is fetched directly, the asset is matched by shape instead of by an
+  exact-version pattern so the aarch64 build and the checksum file are never
+  picked, and the validity check runs with no network call at all, so a GitHub
+  outage or rate limit can no longer influence a launch. A failed update no
+  longer aborts the launch when a usable Proton is already installed.
+- A launch that fails inside the launch path shows the error again. That branch
+  closed the launch dialog, opened an error dialog, and then ran into the
+  shared close below, which took the error dialog straight back down, so the
+  launcher stopped with no message at all.
+- Quitting the launcher on NVIDIA no longer ends in a segfault. Every normal
+  quit left a crash dump of roughly 650 KB in the working directory. The fault
+  sits in the driver's own exit handlers and happens after everything of the
+  launcher's own is already finished, so the launcher now flushes and exits
+  without running the exit handler chain.
+- Auto-detection reads the release tag from a Proton build's own version file
+  instead of its directory name. Ranking by name would have picked a symlink
+  named GE-Proton10-34 that actually holds GE-Proton11-3 and run it while every
+  log line claimed otherwise. Builds that ship no version file, such as
+  Proton-EM or hand-built directories, still fall back to the directory name. A
+  managed Proton that was moved aside for a custom Proton is now counted as
+  present too, so clearing the custom path gets back to it.
+- Starting a game no longer rebuilds a locale inside the game container that
+  nothing uses. It ran on every single launch.
+- A launch that dies before the game connects back no longer leaves the
+  launcher on "GAME LAUNCHING" forever. The wait had exactly one way out, the
+  handshake the game performs once it is up, so anything that killed the game
+  on the way there (an unsupported Proton version, a damaged Wine prefix,
+  missing game files, the game being killed for running out of memory) left the
+  launcher waiting with no error and no way to tell what went wrong. It now
+  ends the wait when the launch is over and says what happened, naming the
+  Proton version as the most likely cause. The existing grace window still
+  applies, so a slow cold start on a Steam Deck is not cut short.
+- A mod collection can no longer write outside the mod directory. Entry names
+  inside the downloaded zip were joined onto the target path unchecked, so a
+  crafted collection could place files anywhere the launcher can write.
+  Absolute paths and parent-directory steps are now rejected, on both path
+  separators. Collections with subfolders keep working.
 - Deleting mods no longer looks broken. Mods are selected by clicking their
   icon, which is easy to miss because clicking anywhere else in the row opens
   the info panel instead, and with nothing selected the delete button did
@@ -96,6 +150,16 @@ Versioning tracks upstream Kyber, with port-specific patches noted separately.
 
 ### Changed
 
+- Proton is pinned to GE-Proton10-34. The launcher no longer follows whatever
+  GE-Proton released last, so a rename or a broken build on their side cannot
+  take a launch down with it, and every machine runs the same build.
+- Automatic detection accepts only that build. A system that carries some other
+  GE-Proton or a proton-cachyos build no longer has it picked up; GE-Proton10-34
+  is downloaded once instead, about 500 MB. Ranking across candidate builds is
+  gone with it. Anyone who wants a different build sets the custom Proton path,
+  which still takes precedence and is not checked against the pin.
+- Wine and Proton log in English regardless of the desktop language, so
+  submitted logs stay readable.
 - The launcher no longer rescans every process on the system 40 times a second
   while a game is running. The scan that checks whether the game is still alive
   sat on the 25ms update loop and refreshed far more than it reads: every hwmon

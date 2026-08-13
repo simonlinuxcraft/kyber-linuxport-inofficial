@@ -149,8 +149,23 @@ rm -f "$APPDIR"/usr/lib/girepository-1.0/WebKit*.typelib \
 # and aborts at startup with:
 #   undefined symbol: nettle_rsa_oaep_sha384_decrypt, version HOGWEED_6
 # Drop these three so the whole chain comes from the system, self-consistent.
-# Safe because the AppImage's glibc baseline already exceeds the nettle/hogweed
-# soname floor, so any system that can start it ships a new-enough crypto stack.
+#
+# The price is that the host must provide the SONAMEs the bundled consumers were
+# linked against: libnettle.so.8 (libarchive, librtmp, libsrt-gnutls),
+# libhogweed.so.6 (librtmp) and libgnutls.so.30 (libavformat, libcups, libldap).
+# The glibc baseline says nothing about those, the nettle SONAME is versioned
+# independently of glibc. Debian, Ubuntu, Fedora and SteamOS ship nettle 3.x and
+# have them. Rolling Arch and CachyOS moved to nettle 4.0, which installs
+# libnettle.so.9 only, so those need the nettle3 compatibility package. That is
+# why README.md lists nettle3 and why tools/kyber-cachyos-hint.sh checks for
+# libnettle.so.8 at startup and offers the one-line fix.
+#
+# The whole chain hangs off libmpv (the first-start intro video); nothing else
+# bundled pulls libarchive or the ffmpeg cluster in.
+#
+# Do not "fix" this by bundling the libraries again. That brings the SteamOS
+# HOGWEED_6 abort back, and SteamOS has no compatibility package to install.
+# The trade is deliberate.
 rm -f "$APPDIR"/usr/lib/libgnutls.so.* \
       "$APPDIR"/usr/lib/libhogweed.so.* \
       "$APPDIR"/usr/lib/libnettle.so.* 2>/dev/null || true
