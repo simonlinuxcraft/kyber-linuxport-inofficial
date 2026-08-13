@@ -71,7 +71,7 @@ distrobox enter "$CONTAINER" -- true
 # 3. Install runtime dependencies inside the container
 # ---------------------------------------------------------------------------
 # NOTE: do NOT install Mesa software-GL drivers and do NOT force
-# LIBGL_ALWAYS_SOFTWARE=1 — the Flutter UI renders correctly on the passed-through
+# LIBGL_ALWAYS_SOFTWARE=1 - the Flutter UI renders correctly on the passed-through
 # NVIDIA GL, and llvmpipe actually FAILS here ("No available configurations for the
 # given RGBA pixel format").
 DEPS="\
@@ -87,7 +87,7 @@ log "Installing runtime libraries (FUSE, GTK/Flutter/Electron deps, xdg-utils)"
 distrobox enter "$CONTAINER" -- bash -lc "sudo apt-get update -qq && sudo apt-get install -y -qq $DEPS"
 
 # Real Firefox from Mozilla's APT repo. Ubuntu's `firefox` is a snap stub that
-# drags in snapd/apparmor (which can't configure in a container) — avoid it.
+# drags in snapd/apparmor (which can't configure in a container) - avoid it.
 log "Installing Firefox (.deb from Mozilla, NOT the snap) for the Nexus/EA OAuth callback"
 distrobox enter "$CONTAINER" -- bash -lc '
   set -e
@@ -178,6 +178,6 @@ cat <<EOF
   Notes:
    * First launch runs the launcher's self-install; if a login browser is needed
      it opens the in-container Firefox so the qrc:// callback returns.
-   * If you ever get 'kicked by Kyber' on join, fully quit and relaunch — that
+   * If you ever get 'kicked by Kyber' on join, fully quit and relaunch - that
      clears any stale wineserver/vkd3d state from a previous run.
 EOF

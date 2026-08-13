@@ -40,7 +40,6 @@ backups/
 # Build / test artifacts
 *.log
 *.bak
-.claude/
 
 # Runtime cache written when the launcher is started from the source tree
 .cache/

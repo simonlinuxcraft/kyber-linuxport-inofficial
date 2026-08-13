@@ -8,7 +8,7 @@ part of this project's source.
 ## Supported Versions
 
 Only the latest released version receives security fixes. Because this is a
-beta-stage port, older releases are not maintained — please update before
+beta-stage port, older releases are not maintained - please update before
 reporting an issue.
 
 | Version        | Supported          |
@@ -25,7 +25,7 @@ Please report issues that affect the **Linux port itself**, for example:
 - Bundled scripts and configuration shipped by this project
 
 **Out of scope:** vulnerabilities in `Kyber.dll` or the Kyber service itself.
-Those concern the upstream Kyber project and cannot be fixed here — please
+Those concern the upstream Kyber project and cannot be fixed here - please
 report them to the official Kyber team instead.
 
 ## Reporting a Vulnerability

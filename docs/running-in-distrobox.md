@@ -22,7 +22,7 @@ sudo apt install -y podman uidmap
 `uidmap` is required for rootless podman subuid/subgid mapping. Confirm
 `grep "^$USER:" /etc/subuid` returns a line (re-login if you just installed it).
 
-## 1. Distrobox 1.7.2.1 — *not* 2.0
+## 1. Distrobox 1.7.2.1 - *not* 2.0
 
 Distrobox **2.0+** invokes `podman ... --userns keep-id:size=65536`; the `:size=`
 syntax needs **podman ≥ 4.3**, and Ubuntu 22.04's podman 3.4.4 rejects it with
@@ -49,7 +49,7 @@ distrobox enter kyber -- true     # triggers one-time init
 
 ## 3. Runtime dependencies
 
-AppImage needs the **FUSE2 `fusermount`** binary (the `fuse` package — `libfuse2t64`
+AppImage needs the **FUSE2 `fusermount`** binary (the `fuse` package - `libfuse2t64`
 alone is *not* enough). The launcher is a **Flutter** app and pulls in the usual
 GTK/Chromium/Electron shared libs, plus `libsecret`, `pipewire`, `libusb`, etc.
 
@@ -101,18 +101,18 @@ distrobox enter kyber -- bash -lc \
   'cd ~/Applications && exec env KYBER_NO_AUTO_INSTALL=1 __GL_MaxFramesAllowed=1 BROWSER=/usr/bin/firefox ./KyberLinuxPort-x86_64.AppImage'
 ```
 
-- `KYBER_NO_AUTO_INSTALL=1` — stops the self-install hook from rewriting the URL
+- `KYBER_NO_AUTO_INSTALL=1` - stops the self-install hook from rewriting the URL
   handlers (next section) back to host paths on every launch.
-- `__GL_MaxFramesAllowed=1` — the NVIDIA render-ahead hint the port already uses
+- `__GL_MaxFramesAllowed=1` - the NVIDIA render-ahead hint the port already uses
   in its own desktop entry.
-- `BROWSER=/usr/bin/firefox` — use the in-container Firefox for OAuth.
+- `BROWSER=/usr/bin/firefox` - use the in-container Firefox for OAuth.
 
 ## 6. Route the qrc:// and nxm:// handlers **into** the container
 
 Kyber's self-install registers host-side `.desktop` handlers for its OAuth
 callback (`qrc://`) and Nexus mod links (`nxm://`). On an old-glibc host those run
 **on the host** (glibc gate) or in the wrong namespace and never reach the running
-in-container launcher — so EA login "never returns" and mod downloads don't fire.
+in-container launcher - so EA login "never returns" and mod downloads don't fire.
 Re-point both into the container:
 
 ```ini
@@ -138,11 +138,11 @@ update-desktop-database ~/.local/share/applications
 - **Intermittent Flutter UI crash** (`FlutterEngineRemoveView … implicit view cannot
   be removed`): the window can vanish while the process lingers. Relaunching clears it.
   Network namespace, GPU, and the gRPC link are *not* the cause.
-- **"Kicked by Kyber" on join** was, in our testing, **transient stale state** — a
+- **"Kicked by Kyber" on join** was, in our testing, **transient stale state** - a
   leftover `wineserver` attached to the prefix plus a stale `vkd3d-proton.cache` from
   repeated launches (cf. upstream issue #6). Fully quit and relaunch; if needed:
   `rm -f ~/.local/share/maxima/custom_proton_path` and the game's `vkd3d-proton.cache`.
   After a clean restart the join handshake succeeds and the gRPC link stays up.
 - **Network**: Distrobox shares the host network namespace and umu/pressure-vessel
   does not unshare it, so the injected `Kyber.dll`'s `127.0.0.1:$KYBER_LAUNCHER_PORT`
-  gRPC connection to the launcher works across the boundary — verified with `ss`.
+  gRPC connection to the launcher works across the boundary - verified with `ss`.

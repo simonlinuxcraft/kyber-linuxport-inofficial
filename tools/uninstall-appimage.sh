@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2026 simonlinuxcraft
 #
-# uninstall-appimage.sh — Reverses install-appimage.sh.
+# uninstall-appimage.sh - Reverses install-appimage.sh.
 # Keeps the Wine prefix (~/.local/share/maxima/) and game data intact.
 
 set -euo pipefail
