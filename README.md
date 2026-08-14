@@ -4,7 +4,6 @@
 
 <p align="center">
   <a href="https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/latest"><img src="https://img.shields.io/github/v/release/simonlinuxcraft/kyber-linuxport-unofficial?label=release&color=f8b133" alt="Latest release"></a>
-  <a href="https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases"><img src="https://img.shields.io/github/v/release/simonlinuxcraft/kyber-linuxport-unofficial?include_prereleases&label=test%20build&color=8b8b8b" alt="Latest test build"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPLv3-blue" alt="GPLv3"></a>
   <img src="https://img.shields.io/badge/glibc-2.39%2B-lightgrey" alt="Requires glibc 2.39 or newer">
 </p>
@@ -12,9 +11,9 @@
 <p align="center">
   <a href="https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/latest"><b>Download the AppImage</b></a>
   &nbsp;·&nbsp;
-  <a href="#test-build">Test build</a>
-  &nbsp;·&nbsp;
   <a href="#install">Install</a>
+  &nbsp;·&nbsp;
+  <a href="#distro-support">Distro support</a>
   &nbsp;·&nbsp;
   <a href="#steam-deck--steamos">Steam Deck</a>
   &nbsp;·&nbsp;
@@ -38,6 +37,7 @@ not to upstream Kyber.
 > SteamOS 3.6 cannot run it. See [Install](#install) for the supported
 > systems and the Distrobox workaround.
 
+<!-- Screenshots temporarily removed, to be replaced with current ones.
 <p align="center">
   <img src="assets/screenshot-home.jpg" alt="Server browser" width="900">
 </p>
@@ -51,35 +51,31 @@ not to upstream Kyber.
 </p>
 
 </details>
+-->
 
 ## Latest release
 
-v0.1.0-beta.6.4.11 is the current stable build. It fixes the AppImage
-self-updater, which never detected new releases because GitHub serves release
-assets as `application/octet-stream` and the launcher rejected the undecoded
-manifest.
+v0.1.0-beta.6.4.12 is the current build, and the in-app updater offers it.
+
+**Update if game launches stopped working.** GE-Proton renamed their release
+assets on 11 August, which broke the download the launcher used to fetch
+Proton. This build pins GE-Proton10-34 and no longer follows whatever
+GE-Proton published last.
+
+The rest of the release is about working with mods. Better Sabers runs on
+Linux now: drop the plugin into the Plugins folder and the saber manager opens
+from the launcher, finds the game by itself and hands the generated mod back to
+your collection. The mod list can ask Nexus which of your mods have a newer
+version and marks them. Collections can be imported, both as a plain
+`.kbcollection` and as the tar archive that carries the mod files with it.
+
+A launch that dies before the game connects back no longer leaves the launcher
+on "GAME LAUNCHING" forever; it now says what happened. Game launches also keep
+working while lutris.net is down, which used to abort them outright.
 
 If you are still on 6.4.10 or older, update by hand once: the broken updater
 shipped in every build before 6.4.11, so those versions cannot fetch the fix
 themselves. After that the in-app updater works.
-
-### Test build
-
-[v0.1.0-beta.6.4.12](https://github.com/simonlinuxcraft/kyber-linuxport-unofficial/releases/tag/v0.1.0-beta.6.4.12) is available as a
-pre-release and is about working with mods. Better Sabers runs on Linux now:
-drop the plugin into the Plugins folder and the saber manager opens from the
-launcher, finds the game by itself and hands the generated mod back to your
-collection. The mod list can ask Nexus which of your mods have a newer
-version and marks them. Collections can be imported, both as a plain
-`.kbcollection` and as the tar archive that carries the mod files with it, and a
-collection can be added even when some of its mods are still missing.
-
-It also keeps game launches working while lutris.net is down, which used to
-abort the launch outright, and stops rescanning every process on the system
-many times a second while a game runs.
-
-It is not offered by the in-app updater, so grab it from the releases page if
-you want to try it.
 
 Older releases are listed in [`CHANGELOG.md`](CHANGELOG.md).
 
@@ -169,6 +165,44 @@ The AUR package is a native binary build (contributed by Yilmaz4), not the
 AppImage, and pulls in its own dependencies. The manual pacman step above is
 only needed if you run the downloaded AppImage directly. The package keeps the
 `-appimage` name for now and will be renamed to `kyber-launcher-bin` at beta 10.
+It is built separately from the AppImage release and can trail it by a version,
+so check `pkgver` if you need the newest build.
+
+## Distro support
+
+No guarantees. This is what reports and testing actually showed, not a
+compatibility promise.
+
+| Distro | Status |
+| --- | --- |
+| ✅ Ubuntu 24.04+ | primary dev platform, every release is tested here |
+| ✅ Fedora, Nobara | community-tested, no open reports |
+| ⚠️ Arch, CachyOS | runs, but `nettle3` has to be installed first, see [Dependencies](#dependencies) |
+| ⚠️ Bazzite | starts without extra packages; one report of AMD instability during play |
+| ⚠️ Steam Deck, SteamOS 3.7+ | launcher runs; the first game start can stall while umu fetches its runtime |
+| ❌ SteamOS 3.6, Ubuntu 22.04, Debian 12 | glibc too old, the launcher refuses to start |
+
+A few notes on the entries that changed:
+
+- **Arch and CachyOS** are the only systems that need a manual step. Rolling
+  Arch ships `libnettle.so.9`, the build needs `libnettle.so.8`. Without
+  `nettle3` the launcher does not start, and it will tell you so.
+- **Bazzite** no longer needs a FUSE2 layer. The AppImage carries the type-2
+  runtime, which speaks FUSE3, falls back to FUSE2 and extracts itself when
+  neither is there. The remaining question mark is a report of GPU instability
+  on AMD during play. One cause on our side, a process scan that ran forty
+  times a second, is fixed in this release; whether that settles it is unknown.
+- **Steam Deck** was measured on SteamOS 3.7.7: glibc 2.41, the launcher starts.
+  A Deck that has never run a Proton game has no Steam runtime to reuse, so the
+  first game start pulls one down and can take a long time.
+
+**Test rig:** Ubuntu 24.04, Ryzen 7 5800X, RTX 3060, 32 GB DDR4, BF2 through
+Steam-Proton with GE-Proton. DX12 does not work on it, DX11 gives 60 to 80 FPS
+on Ultra.
+
+> [!TIP]
+> If BF2 runs rough, the [FPS Booster](https://www.nexusmods.com/starwarsbattlefront22017/mods/12086)
+> mod on Nexus is worth adding to your collection.
 
 ## Steam Deck / SteamOS
 
@@ -209,6 +243,11 @@ Verified to work in testing: GE-Proton 10.x family, Proton-EM Latest,
 proton-cachyos 11.x. Newer builds with Wine 10 + DXVK 2.x can give
 noticeably smoother frame times than the bundled default, at the cost of
 losing the tested-stable safety net.
+
+> [!TIP]
+> To get those builds onto your system, [ProtonPlus](https://flathub.org/en/apps/com.vysp3r.ProtonPlus)
+> is the easiest route. It downloads GE-Proton, Proton-EM and others into the
+> folders the scan already looks at, so they show up in the dialog right after.
 
 Equivalent power-user env var:
 
