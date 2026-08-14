@@ -37,7 +37,6 @@ not to upstream Kyber.
 > SteamOS 3.6 cannot run it. See [Install](#install) for the supported
 > systems and the Distrobox workaround.
 
-<!-- Screenshots temporarily removed, to be replaced with current ones.
 <p align="center">
   <img src="assets/screenshot-home.jpg" alt="Server browser" width="900">
 </p>
@@ -46,12 +45,11 @@ not to upstream Kyber.
 <summary>More screenshots</summary>
 
 <p align="center">
-  <img src="assets/screenshot-mods.jpg" alt="Mod list and collections" width="900">
-  <img src="assets/screenshot-settings.jpg" alt="Settings" width="900">
+  <img src="assets/screenshot-mods.jpg" alt="Mod browser" width="900">
+  <img src="assets/screenshot-settings.jpg" alt="Mods, Proton and renderer settings" width="900">
 </p>
 
 </details>
--->
 
 ## Latest release
 
