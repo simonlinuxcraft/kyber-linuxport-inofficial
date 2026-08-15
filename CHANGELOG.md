@@ -31,6 +31,15 @@ Versioning tracks upstream Kyber, with port-specific patches noted separately.
   found as well, which lives in the Steam library folder rather than among the
   compatibility tools.
 
+- Mods and games kept outside the home directory work again. The game runs
+  inside the Steam runtime container, which only shows it a fixed set of
+  locations, so a mod folder on a second drive (mounted at /HDD, for example)
+  was not there at all once the game started. Battlefront II then loaded no
+  mods and dropped into the normal game menu, with nothing in the log to
+  explain it, because as far as the game was concerned the folder was empty.
+  The game, mod and module directories are now handed to the container
+  explicitly, wherever they live.
+
 - Mod downloads started from the browser reach the launcher again. The
   nxm:// handler was registered with a path inside the running AppImage, and
   that path is different on every start, so a browser that had it from an
