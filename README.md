@@ -45,11 +45,6 @@ not to upstream Kyber.
   <img src="assets/screenshot-ingame.jpg" alt="Battlefront II running on Linux at 152 FPS through Proton and DXVK, joined to a Kyber server" width="900">
 </p>
 
-<p align="center">
-  <sub>A Kyber server on Naboo, running through Proton and DXVK. The overlay is
-  MangoHud, not part of the launcher.</sub>
-</p>
-
 <details>
 <summary>More screenshots</summary>
 
