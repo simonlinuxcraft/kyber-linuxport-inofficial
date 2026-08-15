@@ -5,6 +5,48 @@ All notable changes to the Kyber Linux Port are recorded in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning tracks upstream Kyber, with port-specific patches noted separately.
 
+## [0.1.0-beta.6.4.13] - 2026-08-15 - Launch Recovery
+
+### Fixed
+
+- Starting a game works again on Debian and Ubuntu systems. 6.4.12 gave the
+  game its own hostname on every launch where the machine name resolves to
+  something other than 127.0.0.1, which is the 127.0.1.1 line those installers
+  write by default. On Ubuntu 26.04 the game then started, never connected back
+  to the launcher and never exited, so "Starting Game..." stayed on screen
+  until the launcher was killed. Two user logs show seven such launches and not
+  one of them reaching the game. Only a hosted server needs that hostname, so
+  only hosting asks for it now; joining a server does not.
+
+- A launch that never reports back gives up after five minutes and says so,
+  instead of leaving the dialog spinning with nothing written to the log.
+
+- Proton auto-detection accepts the build a machine already has again. 6.4.12
+  narrowed it to GE-Proton10-34 alone, so anyone carrying GE-Proton11,
+  proton-cachyos or Valve's own Proton was sent through a roughly 516 MB
+  download for a Proton that already worked, and a GE release newer than this
+  port would have been rejected the same way. GE-Proton10-34 stays the build
+  Kyber prefers and installs by default; what makes a build usable is now
+  whether it actually contains a Wine, not what it is called. Valve's Proton is
+  found as well, which lives in the Steam library folder rather than among the
+  compatibility tools.
+
+- Mod downloads started from the browser reach the launcher again. The
+  nxm:// handler was registered with a path inside the running AppImage, and
+  that path is different on every start, so a browser that had it from an
+  earlier session pointed nowhere and the download waited three minutes for a
+  reply that could not arrive. The handler now lives in a fixed location.
+
+- Closing the file download dialog while a download is being prepared no longer
+  throws, and opening the mod browser before it has loaded no longer throws.
+
+- The launcher no longer dies mid-session with "failed printing to stdout"
+  when it was started in a way that leaves its output going nowhere.
+
+- The message shown when the game exits without connecting no longer claims
+  Valve's Proton is at fault. It works for other players, so it is listed as
+  the first thing to check rather than a known defect.
+
 ## [0.1.0-beta.6.4.12] - 2026-08-13 - Mod Management and Proton Pin
 
 ### Added

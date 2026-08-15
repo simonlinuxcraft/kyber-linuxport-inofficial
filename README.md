@@ -53,7 +53,7 @@ not to upstream Kyber.
 
 ## Latest release
 
-v0.1.0-beta.6.4.12 is the current build, and the in-app updater offers it.
+v0.1.0-beta.6.4.13 is the current build, and the in-app updater offers it.
 
 **Update if game launches stopped working.** GE-Proton renamed their release
 assets on 11 August, which broke the download the launcher used to fetch
