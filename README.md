@@ -59,21 +59,27 @@ not to upstream Kyber.
 
 v0.1.0-beta.6.4.13 is the current build, and the in-app updater offers it.
 
-**Update if game launches stopped working.** GE-Proton renamed their release
-assets on 11 August, which broke the download the launcher used to fetch
-Proton. This build pins GE-Proton10-34 and no longer follows whatever
-GE-Proton published last.
+**Update if game launches stopped working on Debian or Ubuntu.** 6.4.12 gave
+the game its own hostname on every launch where the machine name resolves to
+something other than 127.0.0.1, which is what those installers write by
+default. The game then started, never connected back to the launcher and never
+exited, so "Starting Game..." stayed on screen until the launcher was killed.
+Only a hosted server ever needed that, so only hosting uses it now.
 
-The rest of the release is about working with mods. Better Sabers runs on
-Linux now: drop the plugin into the Plugins folder and the saber manager opens
-from the launcher, finds the game by itself and hands the generated mod back to
-your collection. The mod list can ask Nexus which of your mods have a newer
-version and marks them. Collections can be imported, both as a plain
-`.kbcollection` and as the tar archive that carries the mod files with it.
+Your Proton build is accepted again. 6.4.12 narrowed detection to
+GE-Proton10-34 alone, so anyone carrying GE-Proton11, proton-cachyos or Valve's
+own Proton was sent through a roughly 516 MB download for a Proton that already
+worked. GE-Proton10-34 stays the build Kyber prefers and installs by default,
+but any working Proton is used now, including Valve's.
 
-A launch that dies before the game connects back no longer leaves the launcher
-on "GAME LAUNCHING" forever; it now says what happened. Game launches also keep
-working while lutris.net is down, which used to abort them outright.
+Mods kept outside your home directory work. The game runs inside the Steam
+runtime container, which only shows it a fixed set of locations, so a mod
+folder on a second drive was not there at all once the game started, and
+Battlefront II quietly loaded none of them. Mod downloads started in the
+browser reach the launcher again as well.
+
+A launch that never reports back now gives up after five minutes and says so,
+instead of leaving the dialog spinning with nothing in the log.
 
 If you are still on 6.4.10 or older, update by hand once: the broken updater
 shipped in every build before 6.4.11, so those versions cannot fetch the fix
